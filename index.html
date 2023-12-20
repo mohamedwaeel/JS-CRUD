@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>CRUD</title>
+</head>
+
+<body>
+
+    <section>
+        <div class="container">
+            <div class="w-75 mx-auto mt-4">
+                <h1>Product properties</h1>
+                <div class="mb-3">
+                    <label for="pName" class="form-label">Product Name</label>
+                    <input type="text" class="form-control " name="pName" id="pName">
+                    <span class="text-danger d-none" id="nameError">invalid input! (first letter must be capital , word contains from 3 to 6 letters)</span>
+                </div>
+                <div class="mb-3">
+                    <label for="pCat" class="form-label">Product Category</label>
+                    <input type="text" class="form-control " name="pCat" id="pCat">
+                    <span class="text-danger d-none" id="catError">invalid input! the available categories : Mobile , Screen , Watch</span>
+                
+                </div>
+                <div class="mb-3">
+                    <label for="pPrice" class="form-label">Product Price</label>
+                    <input type="text" class="form-control " name="pPrice" id="pPrice">
+                    <span class="text-danger d-none" id="priceError">invalid input! (price must be with value >=1000 or <=10000)</span>
+                
+                </div>
+                <div class="mb-3">
+                    <label for="pDescription" class="form-label">Product description</label>
+                    <textarea class="form-control " name="pDescription" id="pDescription"></textarea>
+                    <span class="text-danger d-none" id="descError">invalid input! cannot enter more than 255 letter</span>
+                
+                </div>
+                <button id="addBtn" type="submit" class="btn btn-outline-info" onclick="addProduct()">Add Product</button>
+                <button id="editBtn" type="submit" class="btn btn-outline-success d-none" onclick="updateProduct()">Update Product</button>
+           
+           
+                <div class="my-3">
+                    <label for="pSearch" class="form-label">Search for product</label>
+                    <input type="text" class="form-control " name="pSearch" id="pSearch" oninput="searchProduct()">
+                </div>
+            </div>
+
+
+            
+
+            <table id="pTable" class="table w-75 mx-auto table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">index</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="prodRow">
+                </tbody>
+            </table>
+            
+            <div id="searchError" class=" d-none text-center w-75 mx-auto border bg-danger-subtle ">
+                <h5 class="text-muted">No items found!</h5>
+            </div>
+
+        </div>
+        </div>
+    </section>
+
+
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

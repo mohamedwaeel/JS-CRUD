@@ -20,7 +20,7 @@ function addProduct() {
         productList.push(product);
         localStorage.setItem("allProducts", JSON.stringify(productList));
         displayProducts(productList);
-        // clearForm();
+        clearForm();
     }
 }
 

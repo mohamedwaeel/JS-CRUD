@@ -2,11 +2,13 @@ let productName = document.getElementById("pName");
 let productCategory = document.getElementById("pCat");
 let productPrice = document.getElementById("pPrice");
 let productDescription = document.getElementById("pDescription");
+
 let productList = [];
-let currentIndex;
+
+let updateIndex;
 if (localStorage.getItem("allProducts")) {
     productList = JSON.parse(localStorage.getItem("allProducts"));
-    displayProducts(productList);
+    displayProducts();
 }
 
 function addProduct() {
@@ -15,98 +17,115 @@ function addProduct() {
             name: productName.value,
             category: productCategory.value,
             price: productPrice.value,
-            description: productDescription.value
+            description: productDescription.value,
+
         };
         productList.push(product);
         localStorage.setItem("allProducts", JSON.stringify(productList));
-        displayProducts(productList);
+        displayProducts();
         clearForm();
     }
 }
 
-function displayProducts(list) {
+function displayProducts() {
     let blackBox = " ";
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < productList.length; i++) {
         blackBox += ` <tr>
     <th scope="row">${i + 1}</th>
-    <td class="text-capitalize">${list[i].newName ? list[i].newName : list[i].name}</td>
-    <td class="text-capitalize">${list[i].category}</td>
-    <td>${list[i].price}</td>
-    <td>${list[i].description}</td>
-    <td><button class="btn btn-success" onclick="editProduct(${currentIndex ? currentIndex : i})">Edit</button></td>
+    <td class="text-capitalize">${productList[i].newName ? productList[i].newName : productList[i].name}</td>
+    <td class="text-capitalize">${productList[i].category}</td>
+    <td>${productList[i].price}</td>
+    <td>${productList[i].description}</td>
+    <td><button class="btn btn-success"  onclick="editProduct(${i})" id="edit">Edit</button></td>
     <td><button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></td>
 </tr>`
     }
 
     document.getElementById("prodRow").innerHTML = blackBox;
-
     checkitems(productList);
 
 
 }
 
 function clearForm() {
-    productName.value = " ";
-    productCategory.value = " ";
-    productPrice.value = " ";
-    productDescription.value = " ";
-    document.getElementById("pSearch").value=" ";
+    productName.value = "";
+    productCategory.value = "";
+    productPrice.value = "";
+    productDescription.value = "";
+    document.getElementById("pSearch").value = "";
 }
 
 function deleteProduct(index) {
     productList.splice(index, 1);
     localStorage.setItem("allProducts", JSON.stringify(productList));
 
-    displayProducts(productList);
+    displayProducts();
 }
 
 
 function editProduct(index) {
+    updateIndex = index;
+
     productName.value = productList[index].name;
     productCategory.value = productList[index].category;
     productPrice.value = productList[index].price;
     productDescription.value = productList[index].description;
 
-    document.getElementById("editBtn").classList.remove("d-none");
+    document.getElementById("updateBtn").classList.remove("d-none");
     document.getElementById("addBtn").classList.add("d-none");
 }
 
 function updateProduct() {
 
     if (allValidation()) {
-        deleteProduct(currentIndex);
-        addProduct();
-        clearForm();
+        let product = {
+            name: productName.value,
+            category: productCategory.value,
+            price: productPrice.value,
+            description: productDescription.value,
 
+        };
+        productList.splice(updateIndex, 1, product);
+        localStorage.setItem("allProducts", JSON.stringify(productList));
+        displayProducts();
+
+        clearForm();
     }
     else {
         updateProduct();
     }
-    document.getElementById("editBtn").classList.add("d-none");
+    document.getElementById("updateBtn").classList.add("d-none");
     document.getElementById("addBtn").classList.remove("d-none");
 
 }
 
-function searchProduct() {
-    let matchedList = [];
-    let keyword = document.getElementById("pSearch").value;
 
+function searchProduct() {
+    let keyword = document.getElementById("pSearch").value;
+    let matchedList=[];
+    let searchBox = "";
     for (let i = 0; i < productList.length; i++) {
 
         if (productList[i].name.toLowerCase().includes(keyword.toLowerCase())) {
-                productList[i].newName = productList[i].name.toLowerCase().replace(keyword, `<span class='text-danger fw-bolder'>${keyword}</span>`);
-                matchedList.push(productList[i]);
-                currentIndex = i;
-            }
+            productList[i].newName = productList[i].name.toLowerCase().replace(keyword, `<span class='text-danger fw-bolder'>${keyword}</span>`);
+            matchedList.push(productList[i]);
+            searchBox += ` <tr>
+            <th scope="row">${i + 1}</th>
+            <td class="text-capitalize">${productList[i].newName}</td>
+            <td class="text-capitalize">${productList[i].category}</td>
+            <td>${productList[i].price}</td>
+            <td>${productList[i].description}</td>
+            <td><button class="btn btn-success"  onclick="editProduct(${i})" id="edit">Edit</button></td>
+            <td><button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></td>
+        </tr>`
         }
 
-        displayProducts(matchedList);
-  
+        document.getElementById("prodRow").innerHTML = searchBox;
+        
+
+    }
     checkitems(matchedList);
 }
-
-
-
 function checkitems(list) {
     if (list.length === 0) {
         document.getElementById("searchError").classList.remove("d-none");

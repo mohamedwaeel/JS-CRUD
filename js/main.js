@@ -8,6 +8,7 @@ let productList = [];
 let updateIndex;
 if (localStorage.getItem("allProducts")) {
     productList = JSON.parse(localStorage.getItem("allProducts"));
+    checkitems(productList);
     displayProducts();
 }
 

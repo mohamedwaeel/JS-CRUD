@@ -115,9 +115,6 @@ function searchProduct() {
             displayProducts(matchedList)
         }
 
-        document.getElementById("prodRow").innerHTML = searchBox;
-        
-
     }
     checkitems(matchedList);
 }

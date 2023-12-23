@@ -6,10 +6,11 @@ let productDescription = document.getElementById("pDescription");
 let productList = [];
 
 let updateIndex;
+let currentIndex;
 if (localStorage.getItem("allProducts")) {
     productList = JSON.parse(localStorage.getItem("allProducts"));
     checkitems(productList);
-    displayProducts();
+    displayProducts(productList);
 }
 
 function addProduct() {
@@ -23,23 +24,24 @@ function addProduct() {
         };
         productList.push(product);
         localStorage.setItem("allProducts", JSON.stringify(productList));
-        displayProducts();
+        displayProducts(productList);
         clearForm();
     }
 }
 
-function displayProducts() {
+function displayProducts(list) {
     let blackBox = " ";
-    for (var i = 0; i < productList.length; i++) {
+    for (var i = 0; i < list.length; i++) {
         blackBox += ` <tr>
     <th scope="row">${i + 1}</th>
-    <td class="text-capitalize">${productList[i].newName ? productList[i].newName : productList[i].name}</td>
-    <td class="text-capitalize">${productList[i].category}</td>
-    <td>${productList[i].price}</td>
-    <td>${productList[i].description}</td>
-    <td><button class="btn btn-success"  onclick="editProduct(${i})" id="edit">Edit</button></td>
+    <td class="text-capitalize">${list[i].newName ? list[i].newName : list[i].name}</td>
+    <td class="text-capitalize">${list[i].category}</td>
+    <td>${list[i].price}</td>
+    <td>${list[i].description}</td>
+    <td><button class="btn btn-success"  onclick="editProduct(${currentIndex? currentIndex : i})" id="edit">Edit</button></td>
     <td><button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></td>
 </tr>`
+currentIndex=null;
     }
 
     document.getElementById("prodRow").innerHTML = blackBox;
@@ -60,7 +62,7 @@ function deleteProduct(index) {
     productList.splice(index, 1);
     localStorage.setItem("allProducts", JSON.stringify(productList));
 
-    displayProducts();
+    displayProducts(productList);
 }
 
 
@@ -88,7 +90,7 @@ function updateProduct() {
         };
         productList.splice(updateIndex, 1, product);
         localStorage.setItem("allProducts", JSON.stringify(productList));
-        displayProducts();
+        displayProducts(productList);
 
         clearForm();
     }
@@ -104,21 +106,13 @@ function updateProduct() {
 function searchProduct() {
     let keyword = document.getElementById("pSearch").value;
     let matchedList=[];
-    let searchBox = "";
     for (let i = 0; i < productList.length; i++) {
 
         if (productList[i].name.toLowerCase().includes(keyword.toLowerCase())) {
             productList[i].newName = productList[i].name.toLowerCase().replace(keyword, `<span class='text-danger fw-bolder'>${keyword}</span>`);
             matchedList.push(productList[i]);
-            searchBox += ` <tr>
-            <th scope="row">${i + 1}</th>
-            <td class="text-capitalize">${productList[i].newName}</td>
-            <td class="text-capitalize">${productList[i].category}</td>
-            <td>${productList[i].price}</td>
-            <td>${productList[i].description}</td>
-            <td><button class="btn btn-success"  onclick="editProduct(${i})" id="edit">Edit</button></td>
-            <td><button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></td>
-        </tr>`
+            currentIndex=i;
+            displayProducts(matchedList)
         }
 
         document.getElementById("prodRow").innerHTML = searchBox;
